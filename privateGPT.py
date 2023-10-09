@@ -12,7 +12,7 @@ import time
 
 #added the path due to colab
 #if not load_dotenv():
-if not load_dotenv("/content/.env"):
+if not load_dotenv(".env"):
     print("Could not load .env file or it is empty. Please check if it exists and is readable.")
     exit(1)
 
@@ -24,6 +24,14 @@ model_path = os.environ.get('MODEL_PATH')
 model_n_ctx = os.environ.get('MODEL_N_CTX')
 model_n_batch = int(os.environ.get('MODEL_N_BATCH',8))
 target_source_chunks = int(os.environ.get('TARGET_SOURCE_CHUNKS',4))
+
+print(embeddings_model_name)
+print(persist_directory)
+print(model_type)
+print(model_path)
+print(model_n_ctx)
+print(model_n_batch)
+print(target_source_chunks)
 
 from constants import CHROMA_SETTINGS
 

@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import os
 import glob
 from typing import List
@@ -18,6 +17,7 @@ from langchain.document_loaders import (
     UnstructuredODTLoader,
     UnstructuredPowerPointLoader,
     UnstructuredWordDocumentLoader,
+    JSONLoader
 )
 
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -27,7 +27,7 @@ from langchain.docstore.document import Document
 
 #added the content path due to colab
 #if not load_dotenv():
-if not load_dotenv("/content/.env"):
+if not load_dotenv(".env"):
     print("Could not load .env file or it is empty. Please check if it exists and is readable.")
     exit(1)
 
@@ -39,7 +39,7 @@ import chromadb
 # Load environment variables
 persist_directory = os.environ.get("PERSIST_DIRECTORY")
 #source_directory = os.environ.get('SOURCE_DIRECTORY', 'source_documents')
-source_directory = os.environ.get('SOURCE_DIRECTORY', "/content/privateGPT/source_documents")
+source_directory = os.environ.get('SOURCE_DIRECTORY', "source_documents")
 embeddings_model_name = os.environ.get('EMBEDDINGS_MODEL_NAME')
 chunk_size = 500
 chunk_overlap = 50
@@ -84,12 +84,14 @@ LOADER_MAPPING = {
     ".ppt": (UnstructuredPowerPointLoader, {}),
     ".pptx": (UnstructuredPowerPointLoader, {}),
     ".txt": (TextLoader, {"encoding": "utf8"}),
+    ".json": (JSONLoader, {"jq_schema": ".", "text_content": False})
     # Add more mappings for other file extensions and loaders as needed
 }
 
 
 def load_single_document(file_path: str) -> List[Document]:
     ext = "." + file_path.rsplit(".", 1)[-1].lower()
+    print(ext)
     if ext in LOADER_MAPPING:
         loader_class, loader_args = LOADER_MAPPING[ext]
         loader = loader_class(file_path, **loader_args)
